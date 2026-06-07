@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class CreateRepoRequest(
     val name: String,
-    val description: String,
+    val description: String? = null,
     @SerializedName("private")
     val isPrivate: Boolean = false
 )

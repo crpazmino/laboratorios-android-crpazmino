@@ -12,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,12 +28,19 @@ import com.crpazmino.lab1repolist.viewmodel.RepoViewModel
 @Composable
 fun CreateRepoScreen(
     viewModel: RepoViewModel = viewModel(),
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onCreated: () -> Unit = {}
 ) {
     val createState by viewModel.createState.collectAsState()
 
     var name by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
+
+    LaunchedEffect(createState) {
+        if (createState is CreateRepoState.Success) {
+            onCreated()
+        }
+    }
 
     Column(
         modifier = modifier
@@ -64,9 +72,7 @@ fun CreateRepoScreen(
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
-            onClick = {
-                viewModel.createRepo("", name, description)
-            },
+            onClick = { viewModel.createRepo(name, description) },
             modifier = Modifier.fillMaxWidth(),
             enabled = name.isNotBlank()
         ) {
@@ -77,10 +83,6 @@ fun CreateRepoScreen(
 
         when (createState) {
             is CreateRepoState.Loading -> CircularProgressIndicator()
-            is CreateRepoState.Success -> {
-                Text("¡Repositorio creado exitosamente!", color = Color.Green)
-                viewModel.resetCreateState()
-            }
             is CreateRepoState.Error -> {
                 val msg = (createState as CreateRepoState.Error).message
                 Text("Error: $msg", color = Color.Red)

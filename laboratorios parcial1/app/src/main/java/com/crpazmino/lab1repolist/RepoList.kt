@@ -17,13 +17,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.crpazmino.lab1repolist.model.Repo
 import com.crpazmino.lab1repolist.viewmodel.RepoUiState
 import com.crpazmino.lab1repolist.viewmodel.RepoViewModel
 
 @Composable
 fun RepoList(
     viewModel: RepoViewModel = viewModel(),
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onEditRepo: (Repo) -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -49,9 +51,14 @@ fun RepoList(
             }
             is RepoUiState.Success -> {
                 val repos = (uiState as RepoUiState.Success).repos
-                LazyColumn {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize()
+                ) {
                     items(repos) { repo ->
-                        RepoItem(repoName = repo.fullName)
+                        RepoItem(
+                            repoName = repo.fullName,
+                            onEdit = { onEditRepo(repo) }
+                        )
                     }
                 }
             }
@@ -61,10 +68,7 @@ fun RepoList(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = "Error: $message",
-                        color = Color.Red
-                    )
+                    Text(text = "Error: $message", color = Color.Red)
                 }
             }
         }
