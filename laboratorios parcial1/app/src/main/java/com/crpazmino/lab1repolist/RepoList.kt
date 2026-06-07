@@ -21,11 +21,14 @@ import com.crpazmino.lab1repolist.viewmodel.RepoUiState
 import com.crpazmino.lab1repolist.viewmodel.RepoViewModel
 
 @Composable
-fun RepoList(viewModel: RepoViewModel = viewModel()) {
+fun RepoList(
+    viewModel: RepoViewModel = viewModel(),
+    modifier: Modifier = Modifier
+) {
     val uiState by viewModel.uiState.collectAsState()
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(top = 16.dp)
     ) {
