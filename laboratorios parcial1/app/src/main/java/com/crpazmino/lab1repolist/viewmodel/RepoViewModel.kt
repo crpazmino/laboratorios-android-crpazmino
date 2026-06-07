@@ -32,7 +32,7 @@ sealed class ActionState {
 
 class RepoViewModel : ViewModel() {
 
-    private val githubToken = "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"
+    private val githubToken = ""
 
     private val _uiState = MutableStateFlow<RepoUiState>(RepoUiState.Loading)
     val uiState: StateFlow<RepoUiState> = _uiState
